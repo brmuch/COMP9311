@@ -19,7 +19,7 @@ select count(*) from accesses where page like 'messageboard%' and params like '%
 
 
 create or replace view Q3(hostname) as
-select hostname from hosts,sessions where hosts.id = sessions.host and sessions.complete = 'f' and hosts.hostname like 'tuba%' group by hosts.hostname;
+select hostname from hosts,sessions where hosts.id = sessions.host and sessions.complete = 'f' and hosts.hostname like 'tuba%' group by hosts.hostname order by hostname;
 ;
 
 
