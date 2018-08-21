@@ -60,19 +60,16 @@ select brewer from q7 where nbeers = (select max(nbeers) from q7);
 ;
 
 -- Q9. Beers that are the only one by their brewer.
-
+create view test(name, num) as 
+select brewers.name, count(*) from brewers,beers where beers.brewer= brewers.id group by brewers.name order by brewers.name;
 create or replace view Q9 as
-select ...
-from   ...
-where  ...
+select beers.name from beers,test,brewers where test.name=brewers.name and brewers.id=beers.brewer and test.num = 1
 ;
 
 -- Q10. Beers sold at bars where John drinks.
 
 create or replace view Q10 as
-select ...
-from   ...
-where  ...
+select beers.name from beers, drinkers, bars,frequents,sells where drinkers.name = 'John' and drinkers.id = frequents.drinker and frequents.bar= bars.id and bars.id = sells.bar and sells.beer = beers.id group by beers.name order by beers.name;
 ;
 
 -- Q11. Bars where either Gernot or John drink.
