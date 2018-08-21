@@ -143,17 +143,17 @@ select Q17_price.bar from Q17_price where Q17_price.price = (select min(price) f
 -- Q18. Which bar is most popular? (Most drinkers)
 
 create or replace view Q18 as
-select ...
-from   ...
-where  ...
+create view Q18_temp(bar, nbeers) as
+select bars.name, count(*)from bars,frequents,drinkers where bars.id = frequents.bar and frequents.drinker = drinkers.id group by bars.name;
+create view Q18 as
+select Q18_temp.bar from Q18_temp where Q18_temp.nbeers = (select max(nbeers) from Q18_temp);
 ;
 
 -- Q19. Which bar is least popular? (May have no drinkers)
 
 create or replace view Q19 as
-select ...
-from   ...
-where  ...
+create view Q19 as
+select Q18_temp.bar from Q18_temp where Q18_temp.nbeers = (select min(nbeers) from Q18_temp);
 ;
 
 -- Q20. Which bar is most expensive? (Highest average price)
