@@ -123,10 +123,12 @@ where beers.name = 'New'
 -- Q16. Find the average price of common beers
 --      ("common" = served in more than two hotels).
 
-create or replace view Q16 as
-select ...
-from   ...
-where  ...
+create view common(beer,nbeers) as 
+select beer, count(*) from sells group by beer;
+
+create view q16(beer,AvePrice) as
+select beers.name, avg(sells.price)::numeric(5,2) from beers,sells where beers.id = sells.beer and sells.beer in (select beer from common where nbeers > 2) 
+group by beers.name order by beers.name;
 ;
 
 -- Q17. Which bar sells 'New' cheapest?
