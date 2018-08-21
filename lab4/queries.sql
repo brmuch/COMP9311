@@ -80,35 +80,44 @@ select bars.name from bars, drinkers, frequents where (drinkers.name = 'Gernot'o
 
 -- Q12. Bars where both Gernot and John drink.
 
-create or replace view Q12 as
-select ...
-from   ...
-where  ...
+create view John(bar) as 
+select bars.name from bars, drinkers, frequents where drinkers.name = 'John' and drinkers.id = frequents.drinker and frequents.bar = bars.id group by bars.name order by bars.name;
+create view Gernot(bar) as
+select bars.name from bars, drinkers, frequents where drinkers.name = 'Gernot'  and drinkers.id = frequents.drinker and frequents.bar = bars.id group by bars.name order by bars.name;
+create view Q12 as
+select John.bar from John, Gernot where John.bar = Gernot.bar;
 ;
 
 -- Q13. Bars where John drinks but Gernot doesn't
 
 create or replace view Q13 as
-select ...
-from   ...
-where  ...
+select John.bar from John where John.bar not in (select * from Gernot)
 ;
 
 -- Q14. What is the most expensive beer?
 
 create or replace view Q14 as
-select ...
-from   ...
-where  ...
+select beers.name from beers, sells where beers.id = sells.beer and sells.price = (select max(price) from sells)
 ;
 
 -- Q15. Find bars that serve New at the same price
 --      as the Coogee Bay Hotel charges for VB.
 
-create or replace view Q15 as
-select ...
-from   ...
-where  ...
+create view price as
+select sells.price 
+from beers, bars, sells 
+where beers.name = 'Victoria Bitter' 
+      and beers.id = sells.beer 
+      and sells.bar = bars.id 
+      and bars.name = 'Coogee Bay Hotel';
+
+create view Q15 as
+select bars.name 
+from bars,beers,sells 
+where beers.name = 'New' 
+      and beers.id = sells.beer 
+      and sells.bar = bars.id 
+      and sells.price = (select * from price);
 ;
 
 -- Q16. Find the average price of common beers
