@@ -75,9 +75,7 @@ select beers.name from beers, drinkers, bars,frequents,sells where drinkers.name
 -- Q11. Bars where either Gernot or John drink.
 
 create or replace view Q11 as
-select ...
-from   ...
-where  ...
+select bars.name from bars, drinkers, frequents where (drinkers.name = 'Gernot'or drinkers.name = 'John') and drinkers.id = frequents.drinker and frequents.bar = bars.id group by bars.name order by bars.name;
 ;
 
 -- Q12. Bars where both Gernot and John drink.
