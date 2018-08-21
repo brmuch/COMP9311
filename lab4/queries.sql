@@ -134,9 +134,10 @@ group by beers.name order by beers.name;
 -- Q17. Which bar sells 'New' cheapest?
 
 create or replace view Q17 as
-select ...
-from   ...
-where  ...
+create view Q17_price(bar,price) as 
+select bars.name, sells.price from bars, sells, beers where beers.name = 'New' and beers.id = sells.beer and sells.bar = bars.id;
+create view Q17 as
+select Q17_price.bar from Q17_price where Q17_price.price = (select min(price) from Q17_price)
 ;
 
 -- Q18. Which bar is most popular? (Most drinkers)
