@@ -176,17 +176,23 @@ where  ...
 -- Q22. Price of cheapest beer at each bar?
 
 create or replace view Q22 as
-select ...
-from   ...
-where  ...
+create or replace view allprice(bar,price) as
+select bars.name,sells.price from sells,bars
+where sells.bar=bars.id
 ;
+create or replace view Q22(bar,min_price) as
+select bar,min(price) from allprice group by bar
+;
+
 
 -- Q23. Name of cheapest beer at each bar?
 
 create or replace view Q23 as
-select ...
-from   ...
-where  ...
+create or replace view Q23(bar,beer) as
+select bars.name,beers.name from bars,beers,Q22,sells
+where min_price=sells.price and sells.bar=bars.id and sells.beer=beers.id and 
+Q22.bar=bars.name
+group by bars.name,beers.name
 ;
 
 -- Q24. How many drinkers are in each suburb?
