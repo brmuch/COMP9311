@@ -159,9 +159,10 @@ select Q18_temp.bar from Q18_temp where Q18_temp.nbeers = (select min(nbeers) fr
 -- Q20. Which bar is most expensive? (Highest average price)
 
 create or replace view Q20 as
-select ...
-from   ...
-where  ...
+create view Q20_temp(bar,price) as
+select bars.name, avg(sells.price) from sells, bars where sells.bar = bars.id group by bars.name;
+create view Q20 as
+select bar from Q20_temp where price = (select max(price) from Q20_temp);
 ;
 
 -- Q21. Which beers are sold at all bars?
@@ -191,9 +192,7 @@ where  ...
 -- Q24. How many drinkers are in each suburb?
 
 create or replace view Q24 as
-select ...
-from   ...
-where  ...
+select addr, count(*) from drinkers group by addr
 ;
 
 -- Q25. How many bars in suburbs where drinkers live?
